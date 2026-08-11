@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beam Veda - Beam Management Solution</title>
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#1B2430" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#EEF0EC; --surface:#FFFFFF; --ink:#1B2430;
+  --steel:#3F5266; --steel-light:#7C8FA0;
+  --accent:#D2691E; --accent-dark:#A8541A;
+  --line:#DBDFE1; --success:#2F7D52; --success-bg:#E7F3EC;
+  --danger:#B3402F; --danger-bg:#FBEBE7; --warning:#B4860B; --warning-bg:#FBF3DC;
+  --radius:6px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.45;min-height:100vh;}
+h1,h2,h3,h4,.display{font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;letter-spacing:.02em;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;font-size:14px;}
+a{color:var(--accent-dark);}
+.hidden{display:none !important;}
+.app-header{background:var(--surface);border-bottom:1px solid var(--line);}
+.header-top{max-width:1200px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;}
+.brand-logo{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--steel);overflow:hidden;}
+.brand-logo img{width:100%;height:100%;object-fit:cover;}
+.brand-name{font-size:26px;line-height:1;color:var(--ink);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.brand-sub{font-size:11px;color:var(--steel-light);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.contact-block{text-align:right;font-size:12.5px;color:var(--steel);line-height:1.5;white-space:pre-line;}
+.title-strip{background:var(--ink);color:#fff;position:relative;overflow:hidden;}
+.title-strip-inner{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.page-title{font-size:20px;text-transform:uppercase;letter-spacing:.12em;color:#fff;margin:0;}
+.tape{height:6px;width:100%;background-image:repeating-linear-gradient(90deg,var(--accent) 0 2px, transparent 2px 12px);opacity:.9;}
+.session-box{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#D8DEE4;flex-wrap:wrap;}
+.session-box b{color:#fff;}
+.lang-toggle{display:flex;border:1px solid #4A5A6C;border-radius:20px;overflow:hidden;}
+.lang-toggle button{background:transparent;border:none;color:#D8DEE4;padding:4px 12px;font-size:12px;font-weight:600;}
+.lang-toggle button.active{background:var(--accent);color:#fff;}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;transition:.12s ease;white-space:nowrap;}
+.btn:hover{border-color:var(--steel-light);}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn-accent:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+.btn-steel{background:var(--steel);border-color:var(--steel);color:#fff;}
+.btn-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
+.btn-danger:hover{background:var(--danger);color:#fff;}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--steel);}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.shell{max-width:1200px;margin:0 auto;padding:20px;}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:2px solid var(--line);}
+.tab-btn{background:transparent;border:none;padding:10px 16px;font-family:'Barlow Condensed';font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--steel-light);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:600;}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--accent);}
+.tab-btn:hover{color:var(--ink);}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
+.card h3{margin:0 0 14px;font-size:19px;text-transform:uppercase;letter-spacing:.04em;color:var(--steel);}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px;}
+.field label{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--steel-light);font-weight:600;margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:var(--radius);background:#fbfbfa;color:var(--ink);}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+.row-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.banner{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;}
+.banner-success{background:var(--success-bg);color:var(--success);}
+.banner-error{background:var(--danger-bg);color:var(--danger);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{text-align:left;font-family:'Barlow Condensed';font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--steel-light);border-bottom:2px solid var(--line);padding:8px 8px;white-space:nowrap;}
+tbody td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody tr:hover{background:#FAFAF8;}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
+.pill-open{background:var(--warning-bg);color:var(--warning);}
+.pill-partial{background:#FBE9DC;color:var(--accent-dark);}
+.pill-closed{background:var(--success-bg);color:var(--success);}
+.table-wrap{overflow-x:auto;}
+.login-wrap{display:flex;justify-content:center;padding:60px 20px;}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:32px;max-width:380px;width:100%;box-shadow:0 6px 24px rgba(20,30,40,.06);}
+.login-card h2{margin:0 0 4px;font-size:24px;text-transform:uppercase;color:var(--ink);}
+.login-card p.sub{color:var(--steel-light);font-size:12.5px;margin:0 0 20px;}
+.pipe-mark{width:46px;height:46px;margin:0 auto 14px;display:block;}
+.pw-wrap{position:relative;}
+.pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:11px;color:var(--steel-light);}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,25,32,.5);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:100;overflow-y:auto;}
+.modal{background:#fff;border-radius:8px;max-width:640px;width:100%;padding:22px;}
+.modal h3{margin-top:0;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;}
+.stat-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;}
+.stat-box .num{font-family:'Barlow Condensed';font-size:30px;color:var(--ink);line-height:1;}
+.stat-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--steel-light);margin-top:4px;}
+.helper{font-size:11.5px;color:var(--steel-light);margin-top:4px;}
+.app-footer{max-width:1200px;margin:0 auto;padding:18px 20px 40px;font-size:11.5px;color:var(--steel-light);text-align:center;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:white;padding:12px 18px;border-radius:6px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:200;}
+.toast.error{background:var(--danger);}
+@media (max-width:640px){
+  .brand-name{font-size:20px;}
+  .contact-block{text-align:left;}
+  .header-top{flex-direction:column;align-items:flex-start;}
+  .page-title{font-size:16px;}
+  table thead{display:none;}
+  tbody tr{display:block;border-bottom:2px solid var(--line);padding:8px 0;}
+  tbody td{display:flex;justify-content:space-between;gap:10px;border-bottom:none;padding:4px 4px;text-align:right;}
+  tbody td::before{content:attr(data-label);font-weight:600;color:var(--steel-light);text-align:left;text-transform:uppercase;font-size:10.5px;letter-spacing:.04em;}
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="app-header"><div class="header-top">
+    <div class="brand"><div class="brand-logo" id="login-brand-logo"><svg viewBox="0 0 48 48" width="30" height="30" fill="none"><circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="12" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="4" fill="#fff"/></svg></div>
+      <div>
+        <div class="brand-name" id="login-brand-name">Beam Veda</div>
+        <div class="brand-sub" id="login-brand-sub">Beam Management Solution</div>
+      </div>
+    </div>
+    <div class="contact-block" id="login-contact"></div>
+    <div class="contact-block" id="login-support-email" style="font-size:11px;opacity:0.75;margin-top:4px;"></div>
+  </div></div>
+  <div class="tape"></div>
+  <div class="title-strip"><div class="title-strip-inner"><h1 class="page-title">Beam Veda</h1></div></div>
+  <div class="shell">
+    <div class="login-wrap"><div class="login-card">
+      <svg class="pipe-mark" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="21" stroke="#3F5266" stroke-width="3"/><circle cx="24" cy="24" r="13" stroke="#D2691E" stroke-width="3"/><circle cx="24" cy="24" r="4.5" fill="#3F5266"/></svg>
+      <h2>Sign in</h2><p class="sub">Enter your user ID and password to continue.</p>
+      <div id="login-error" class="banner banner-error hidden"></div>
+      <form id="login-form">
+        <div class="field" id="company-slug-field" style="margin-bottom:12px;">
+          <label>Company</label>
+          <input type="text" id="companySlug" placeholder="e.g. jain-wraptech" autocomplete="off" />
+        </div>
+        <div class="field" style="margin-bottom:12px;"><label>User ID</label><input type="text" id="userId" autocomplete="username" required /></div>
+        <div class="field" style="margin-bottom:18px;">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle" id="pw-toggle">Show</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-accent" style="width:100%;padding:11px;">Log in</button>
+      </form>
+      <p style="text-align:center;margin-top:14px; display:flex; justify-content:space-between;">
+        <button class="btn btn-ghost btn-sm" id="root-toggle" type="button">Root admin login</button>
+        <button class="btn btn-ghost btn-sm hidden" id="forgot-link" type="button">Forgot password?</button>
+      </p>
+    </div></div>
+  </div>
+  <div class="app-footer">&copy; 2026 Beam Veda Management. All rights reserved.</div>
+</div>
+
+<div id="app-shell" class="hidden">
+  <div class="app-header"><div class="header-top">
+    <div class="brand"><div class="brand-logo" id="brand-logo"><svg viewBox="0 0 48 48" width="30" height="30" fill="none"><circle cx="24" cy="24" r="20" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="12" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="4" fill="#fff"/></svg></div>
+      <div>
+        <div class="brand-name" id="brand-name">Beam Veda</div>
+        <div class="brand-sub" id="brand-sub">Beam Pipe Stock Register</div>
+        <div style="font-size:10px;color:var(--steel-light);margin-top:2px;">Powered by <b style="color:var(--steel);">Beam Veda</b></div>
+      </div>
+    </div>
+    <div class="contact-block" id="app-contact"></div>
+  </div></div>
+  <div class="tape"></div>
+  <div class="title-strip"><div class="title-strip-inner">
+    <h1 class="page-title" id="page-title">Beam Veda</h1>
+    <div class="session-box">
+      <div class="lang-toggle" id="lang-toggle"></div>
+      <span id="user-name"></span>
+      <button class="btn btn-sm" id="logout-btn" type="button">Log out</button>
+    </div>
+  </div></div>
+  <div class="shell">
+    <div class="tabs" id="tabs"></div>
+    <div id="page-content"></div>
+  </div>
+  <div class="app-footer">&copy; 2026 Beam Veda Management. All rights reserved.</div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+<script src="/app.js"></script>
+</body>
+</html>

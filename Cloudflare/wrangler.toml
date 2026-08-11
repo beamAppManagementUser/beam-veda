@@ -1,0 +1,33 @@
+name = "beam-veda"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "beam-veda-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "beam-veda-photos"
+
+[triggers]
+crons = ["0 2 * * *", "0 3 * * *"]
+# Both now fire DAILY at 02:00/03:00 UTC, but only actually run their work
+# when platform_settings says enough days have passed (root-configurable —
+# see the Backups tab). Cloudflare Cron Triggers can't be changed at
+# runtime, so "daily check, conditionally act" is how "every N days" is
+# implemented without needing a redeploy every time root changes it.
+# 02:00 UTC -> system backup (JSON dump, root), if due
+# 03:00 UTC -> company data backups + auto-purge retention sweep, if due
+
+[vars]
+# Non-secret config. Secrets (SESSION_SECRET, RESEND_API_KEY) are set with:
+#   npx wrangler secret put SESSION_SECRET
+#   npx wrangler secret put RESEND_API_KEY
+BACKUP_RETENTION_DAYS = "30"
+ALERT_EMAIL = ""  # set to your email so scheduled-job failures reach you (recommendation, implemented) — blank = alerts disabled
