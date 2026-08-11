@@ -1,0 +1,59 @@
+name: Extract and commit Cloudflare ZIP
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  extract-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Install unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
+
+      - name: Unzip Cloudflare archive
+        run: |
+          set -e
+          ZIP_PATH="./beam-veda-project_Cloudflare.zip"
+          if [ ! -f "$ZIP_PATH" ]; then
+            echo "ZIP not found at $ZIP_PATH"
+            exit 1
+          fi
+          rm -rf tmp_extract
+          mkdir -p tmp_extract
+          unzip -o "$ZIP_PATH" -d tmp_extract
+
+      - name: Copy files into Cloudflare (flatten top-level)
+        run: |
+          set -e
+          TARGET_DIR="Cloudflare"
+          mkdir -p "$TARGET_DIR"
+          # If the archive has a top-level directory named 'beam-veda', copy its contents; otherwise copy all
+          if [ -d tmp_extract/beam-veda ]; then
+            cp -a tmp_extract/beam-veda/. "$TARGET_DIR/"
+          else
+            cp -a tmp_extract/. "$TARGET_DIR/"
+          fi
+
+      - name: Commit and push changes
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          set -e
+          git config user.name "$GIT_AUTHOR_NAME"
+          git config user.email "$GIT_AUTHOR_EMAIL"
+          git add Cloudflare
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add extracted Cloudflare project from beam-veda-project_Cloudflare.zip"
+            git push origin main
+          fi
